@@ -3,19 +3,25 @@ from django.db import models
 
 # Create your models here.
 class City(models.Model):
-    name = models.CharField(max_length=50)
-    town_code = models.SmallIntegerField(default=-1)
-
-
-class Agas(models.Model):
     name = models.CharField(max_length=100)
-    agas_code = models.IntegerField(default=-1)
+    code = models.SmallIntegerField(unique=True)
+
+    def __str__(self):
+        return f'{self.name}: {self.code}'
+
+
+class AgasCity(models.Model):
+    districts = models.CharField(max_length=100, default='unknown')
+    main_streets = models.CharField(max_length=300, null=True, blank=True)
+    code = models.IntegerField(default=-1)
+    city = models.ForeignKey(City, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.districts}: {self.code}, {self.city}'
 
 
 class CovidData(models.Model):
     ministry_id = models.IntegerField()
-    town_code = models.SmallIntegerField(default=-1)
-    agas_code = models.IntegerField(default=-1)
     date = models.DateField()
     accumulated_tested = models.IntegerField(default=-1)
     new_tested_on_date = models.BooleanField()
@@ -27,5 +33,7 @@ class CovidData(models.Model):
     new_hospitalized_on_date = models.BooleanField()
     accumulated_deaths = models.IntegerField(default=-1)
     new_deaths_on_date = models.BooleanField()
-    agas = models.ForeignKey(Agas, on_delete=models.CASCADE, null=True, blank=True)
-    city = models.ForeignKey(City, on_delete=models.CASCADE)
+    agas_city = models.ForeignKey(AgasCity, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.id}: {self.ministry_id}- {self.date}, {self.agas_city}'
