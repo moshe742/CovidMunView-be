@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('COVID_SECRET')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG_COVID', False)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['covid.moshe742.name']
 
 
 # Application definition
@@ -79,6 +79,12 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+        # 'ENGINE': 'django.db.backends.postgresql',
+        # 'NAME': 'mydatabase',
+        # 'USER': 'mydatabaseuser',
+        # 'PASSWORD': 'mypassword',
+        # 'HOST': '127.0.0.1',
+        # 'PORT': '5432',
     }
 }
 
