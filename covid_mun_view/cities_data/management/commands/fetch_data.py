@@ -13,7 +13,6 @@ class Command(BaseCommand):
         parser.add_argument('--all', action='count', default=0)
 
     def handle(self, *args, **options):
-        print(options)
         cities = City.objects.all()
         agases = AgasCity.objects.all()
 
@@ -34,13 +33,22 @@ class Command(BaseCommand):
                 recoveries_on_date = True if record['new_recoveries_on_date'] == 'TRUE' else False
                 hospitalize_on_date = True if record['new_hospitalized_on_date'] == 'TRUE' else False
                 deaths_on_date = True if record['new_deaths_on_date'] == 'TRUE' else False
+
                 city = City.objects.filter(code=record['town_code']).first()
+
+                if not city:
+                    city = City(name=record['town'], code=record['town_code'])
+                    city.save()
                 agas_code = record['agas_code'] if record['agas_code'] else -1
-                print(agas_code)
+
                 agas_city = AgasCity.objects.filter(city=city,
                                                     code=agas_code).first()
-                print(agas_city)
-                print(city, record['town_code'])
+
+                if not agas_city:
+                    agas_city = AgasCity(districts='unknown', main_streets='unknown',
+                                         code=agas_code, city=city)
+                    agas_city.save()
+
                 date_stats = datetime.strptime(record['date'], '%Y/%m/%d')
                 covid_data = CovidData(
                     ministry_id=record['_id'],
@@ -50,7 +58,7 @@ class Command(BaseCommand):
                     new_recoveries_on_date=recoveries_on_date,
                     new_hospitalized_on_date=hospitalize_on_date,
                     new_deaths_on_date=deaths_on_date,
-                    agas_city=agas_city.id,
+                    agas_city=agas_city,
                 )
                 if '<' not in record['accumulated_tested']:
                     covid_data.accumulated_tests = record['accumulated_tested']
@@ -63,7 +71,7 @@ class Command(BaseCommand):
                 if '<' not in record['accumulated_deaths']:
                     covid_data.accumulated_deaths = record['accumulated_deaths']
                 covid_data.save()
-            sleep(5)
+            sleep(2)
             self.stdout.write(f"getting the next batch from {res_json['result']['_links']['next']}")
             res = requests.get(f"{url}{res_json['result']['_links']['next']}")
             res_json = res.json()

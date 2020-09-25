@@ -10,9 +10,9 @@ class CovidCity(View):
         res = []
         for area in covid_by_area:
             d = dict(
-                town_code=area.town_code,
-                agas_code=area.agas_code,
-                date=area.date,
+                city_code=area.agas_city.city.code,
+                agas_code=area.agas_city.code,
+                date=area.date.strftime('%d/%m/%Y'),
                 accumulated_tested=area.accumulated_tested,
                 new_tested_on_date=area.new_tested_on_date,
                 accumulated_cases=area.accumulated_cases,
@@ -23,8 +23,8 @@ class CovidCity(View):
                 new_hospitalized_on_date=area.new_hospitalized_on_date,
                 accumulated_deaths=area.accumulated_deaths,
                 new_deaths_on_date=area.new_deaths_on_date,
-                agas=area.agas,
-                city=area.city,
+                agas=area.agas_city.districts,
+                city=area.agas_city.city.name,
             )
             res.append(d)
-        return JsonResponse(res)
+        return JsonResponse(res, safe=False)
