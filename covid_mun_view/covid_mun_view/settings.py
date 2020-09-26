@@ -26,7 +26,7 @@ SECRET_KEY = os.environ.get('COVID_SECRET')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG_COVID', False)
 
-ALLOWED_HOSTS = ['covid.moshe742.name']
+ALLOWED_HOSTS = ['covid.moshe742.name', 'localhost']
 
 
 # Application definition
@@ -77,14 +77,14 @@ WSGI_APPLICATION = 'covid_mun_view.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-        # 'ENGINE': 'django.db.backends.postgresql',
-        # 'NAME': 'mydatabase',
-        # 'USER': 'mydatabaseuser',
-        # 'PASSWORD': 'mypassword',
-        # 'HOST': '127.0.0.1',
-        # 'PORT': '5432',
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'covid',
+        'USER': 'covid',
+        'PASSWORD': os.environ.get('COVID_DB_PASSWORD'),
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
 
@@ -126,3 +126,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = f'{BASE_DIR}/static/'
