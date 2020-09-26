@@ -36,4 +36,4 @@ class CovidCity(View):
             )
             res.append(d)
         logger.info('end get')
-        return JsonResponse(data, safe=False)
+        return JsonResponse(res, safe=False)
