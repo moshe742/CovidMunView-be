@@ -20,5 +20,5 @@ from cities_data.views import CovidCity
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', CovidCity.as_view()),
+    path('api/', CovidCity.as_view()),
 ]
