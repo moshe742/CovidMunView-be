@@ -13,7 +13,7 @@ logger.setLevel(logging.DEBUG)
 class CovidCity(View):
     def get(self, request):
         logger.info('start get')
-        covid_by_area = CovidData.objects.filter(date='2020-09-09').all()
+        covid_by_area = CovidData.objects.order_by('-date').limit(1000).all()
         data = serializers.serialize('json', covid_by_area)
         # res = []
         # for area in covid_by_area:
@@ -36,4 +36,4 @@ class CovidCity(View):
         #     )
         #     res.append(d)
         logger.info('end get')
-        return JsonResponse(data, safe=False)
+        return data
