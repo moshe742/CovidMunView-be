@@ -11,7 +11,7 @@ class City(models.Model):
 
 
 class AgasCity(models.Model):
-    districts = models.CharField(max_length=100, default='unknown')
+    districts = models.CharField(max_length=300, default='unknown')
     main_streets = models.CharField(max_length=300, null=True, blank=True)
     code = models.IntegerField(default=-1)
     city = models.ForeignKey(City, on_delete=models.CASCADE)
