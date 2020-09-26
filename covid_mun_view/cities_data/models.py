@@ -35,5 +35,8 @@ class CovidData(models.Model):
     new_deaths_on_date = models.BooleanField()
     agas_city = models.ForeignKey(AgasCity, on_delete=models.CASCADE)
 
+    class Meta:
+        ordering = ['-date']
+
     def __str__(self):
         return f'{self.id}: {self.ministry_id}- {self.date}, {self.agas_city}'
