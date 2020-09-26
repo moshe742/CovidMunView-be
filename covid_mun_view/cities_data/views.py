@@ -1,11 +1,17 @@
+import logging
+
 from django.http import JsonResponse
 from django.views import View
 
 from cities_data.models import CovidData
 
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
 
 class CovidCity(View):
     def get(self, request):
+        logger.info('start get')
         covid_by_area = CovidData.objects.all()
         res = []
         for area in covid_by_area:
@@ -27,4 +33,5 @@ class CovidCity(View):
                 city=area.agas_city.city.name,
             )
             res.append(d)
+        logger.info('end get')
         return JsonResponse(res, safe=False)
