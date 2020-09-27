@@ -11,17 +11,18 @@ from cities_data.models import CovidData, City, AgasCity
 class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('--all', action='count', default=0)
+        parser.add_argument('--date', nargs=1)
 
     def handle(self, *args, **options):
-        cities = City.objects.all()
-        agases = AgasCity.objects.all()
-
         url = 'https://data.gov.il'
         path = '/api/3/action/datastore_search'
         payload = {'resource_id': 'd07c0771-01a8-43b2-96cc-c6154e7fa9bd'}
-        if options['all'] < 1:
+        if options['all'] < 1 and not options['date']:
             three_days_ago = date.today() + timedelta(days=-3)
             payload['q'] = three_days_ago.strftime('%Y/%m/%d')
+        elif options['date']:
+            date_to_fetch = datetime.strptime(options['date'], '%Y-%m-%d')
+            payload['q'] = date_to_fetch.strftime('%Y/%m/%d')
 
         res = requests.get(f'{url}{path}', params=payload)
         res_json = res.json()
