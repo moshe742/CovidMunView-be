@@ -21,7 +21,7 @@ class Command(BaseCommand):
             three_days_ago = date.today() + timedelta(days=-3)
             payload['q'] = three_days_ago.strftime('%Y/%m/%d')
         elif options['date']:
-            date_to_fetch = datetime.strptime(options['date'], '%Y-%m-%d')
+            date_to_fetch = datetime.strptime(options['date'][0], '%Y-%m-%d')
             payload['q'] = date_to_fetch.strftime('%Y/%m/%d')
 
         res = requests.get(f'{url}{path}', params=payload)
