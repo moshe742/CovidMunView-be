@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.views import View
 from django.core import serializers
 
-from cities_data.models import CovidData
+from cities_data.models import CovidData, AgasCity
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -14,7 +14,8 @@ logger.setLevel(logging.DEBUG)
 class CovidCity(View):
     def get(self, request, city, start_date=None, end_date=None):
         logger.debug('start get')
-        covid_by_city = CovidData.objects.filter(agas_city__city__code=city)
+        num_of_agases_at_city = 0
+        covid_by_city = CovidData.objects.filter(agas_city__city__code=city).order_by('-date')
         if start_date and end_date:
             start_date = datetime.strptime(start_date, '%Y-%m-%d')
             covid_by_city = covid_by_city.filter(date__gte=start_date)
@@ -24,8 +25,11 @@ class CovidCity(View):
             start_date = datetime.strptime(start_date, '%Y-%m-%d')
             covid_by_city = covid_by_city.filter(date=start_date)
         else:
-            covid_by_city = covid_by_city.order_by('-date').limit(1)
+            num_of_agases_at_city = AgasCity.objects.filter(city__code=city).count()
+
         covid_by_area = covid_by_city.all()
+        if num_of_agases_at_city:
+            covid_by_area = covid_by_area[:num_of_agases_at_city]
         # data = serializers.serialize('json', covid_by_area)
         res = []
         for area in covid_by_area:
