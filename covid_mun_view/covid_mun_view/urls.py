@@ -20,5 +20,7 @@ from cities_data.views import CovidCity
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', CovidCity.as_view()),
+    path('api/<int:city>/<str:start_date>/<str:end_date>/', CovidCity.as_view()),
+    path('api/<int:city>/<str:start_date>/', CovidCity.as_view()),
+    path('api/<int:city>/', CovidCity.as_view()),
 ]

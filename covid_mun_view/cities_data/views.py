@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 
 from django.http import JsonResponse
 from django.views import View
@@ -11,9 +12,16 @@ logger.setLevel(logging.DEBUG)
 
 
 class CovidCity(View):
-    def get(self, request):
-        logger.info('start get')
-        covid_by_area = CovidData.objects.filter(date='2020-09-20').filter(agas_city__city__name='ירושלים').all()
+    def get(self, request, city, start_date=None, end_date=None):
+        logger.debug('start get')
+        covid_by_city = CovidData.objects.filter(agas_city__city__code=city)
+        if start_date:
+            start_date = datetime.strptime(start_date, '%Y-%m-%d')
+            covid_by_city = covid_by_city.filter(date__gte=start_date)
+        if end_date:
+            end_date = datetime.strptime(end_date, '%Y-%m-%d')
+            covid_by_city = covid_by_city.filter(date__lte=end_date)
+        covid_by_area = covid_by_city.all()
         # data = serializers.serialize('json', covid_by_area)
         res = []
         for area in covid_by_area:
@@ -35,5 +43,5 @@ class CovidCity(View):
                 city=area.agas_city.city.name,
             )
             res.append(d)
-        logger.info('end get')
+        logger.debug('end get')
         return JsonResponse(res, safe=False)
