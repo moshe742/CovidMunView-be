@@ -15,12 +15,16 @@ class CovidCity(View):
     def get(self, request, city, start_date=None, end_date=None):
         logger.debug('start get')
         covid_by_city = CovidData.objects.filter(agas_city__city__code=city)
-        if start_date:
+        if start_date and end_date:
             start_date = datetime.strptime(start_date, '%Y-%m-%d')
             covid_by_city = covid_by_city.filter(date__gte=start_date)
-        if end_date:
             end_date = datetime.strptime(end_date, '%Y-%m-%d')
             covid_by_city = covid_by_city.filter(date__lte=end_date)
+        elif start_date:
+            start_date = datetime.strptime(start_date, '%Y-%m-%d')
+            covid_by_city = covid_by_city.filter(date=start_date)
+        else:
+            covid_by_city = covid_by_city.order_by('-date').limit(1)
         covid_by_area = covid_by_city.all()
         # data = serializers.serialize('json', covid_by_area)
         res = []
