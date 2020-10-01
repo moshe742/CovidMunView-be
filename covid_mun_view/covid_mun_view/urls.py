@@ -14,13 +14,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
 
-from cities_data.views import CovidCity
+from cities_data.views import CovidAgasView, CovidCityView, CovidDataView
+
+apipatterns = [
+    path('agas_list/', CovidAgasView.as_view()),
+    path('city_list/', CovidCityView.as_view()),
+    path('<int:city>/<str:start_date>/<str:end_date>/', CovidDataView.as_view()),
+    path('<int:city>/<str:start_date>/', CovidDataView.as_view()),
+    path('<int:city>/', CovidDataView.as_view()),
+]
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/<int:city>/<str:start_date>/<str:end_date>/', CovidCity.as_view()),
-    path('api/<int:city>/<str:start_date>/', CovidCity.as_view()),
-    path('api/<int:city>/', CovidCity.as_view()),
+    path('api/', include(apipatterns))
 ]

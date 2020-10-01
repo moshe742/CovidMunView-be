@@ -5,17 +5,45 @@ from django.http import JsonResponse
 from django.views import View
 from django.core import serializers
 
-from cities_data.models import CovidData, AgasCity
+from cities_data.models import CovidData, AgasCity, City
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
 
-class CovidCity(View):
+class CovidAgasView(View):
+    def get(self, request):
+        agases = AgasCity.objects.select_related('city').all()
+        res = []
+        for agas in agases:
+            d = {
+                'districts': agas.districts,
+                'main_streets': agas.main_streets,
+                'agas_code': agas.code,
+                'city': agas.city.name
+            }
+            res.append(d)
+        return JsonResponse(res, safe=False)
+
+
+class CovidCityView(View):
+    def get(self, request):
+        cities = City.objects.all()
+        res = []
+        for city in cities:
+            d = {
+                'name': city.name,
+                'code': city.code,
+            }
+            res.append(d)
+        return JsonResponse(res, safe=False)
+
+
+class CovidDataView(View):
     def get(self, request, city, start_date=None, end_date=None):
         logger.debug('start get')
         num_of_agases_at_city = 0
-        covid_by_city = CovidData.objects.filter(agas_city__city__code=city).order_by('-date')
+        covid_by_city = CovidData.objects.select_related('agas_city').select_related('agas_city__city').filter(agas_city__city__code=city).order_by('-date')
         if start_date and end_date:
             start_date = datetime.strptime(start_date, '%Y-%m-%d')
             covid_by_city = covid_by_city.filter(date__gte=start_date)
