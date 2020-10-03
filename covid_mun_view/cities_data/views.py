@@ -20,6 +20,7 @@ class CovidAgasView(View):
                 'districts': agas.districts,
                 'main_streets': agas.main_streets,
                 'agas_code': agas.code,
+                'city_code': agas.city.code,
                 'city': agas.city.name
             }
             res.append(d)
