@@ -13,17 +13,9 @@ class Command(BaseCommand):
         parser.add_argument('--all', action='count', default=0)
         parser.add_argument('--date', nargs=1)
 
-    def handle(self, *args, **options):
+    def run_queries(self, payload):
         url = 'https://data.gov.il'
         path = '/api/3/action/datastore_search'
-        payload = {'resource_id': 'd07c0771-01a8-43b2-96cc-c6154e7fa9bd'}
-        if options['all'] < 1 and not options['date']:
-            three_days_ago = date.today() + timedelta(days=-3)
-            payload['q'] = three_days_ago.strftime('%Y/%m/%d')
-        elif options['date']:
-            date_to_fetch = datetime.strptime(options['date'][0], '%Y-%m-%d')
-            payload['q'] = date_to_fetch.strftime('%Y/%m/%d')
-
         res = requests.get(f'{url}{path}', params=payload)
         res_json = res.json()
         records = res_json['result']['records']
@@ -77,4 +69,19 @@ class Command(BaseCommand):
             res = requests.get(f"{url}{res_json['result']['_links']['next']}")
             res_json = res.json()
             records = res_json['result']['records']
-        self.stdout.write('all done!')
+        self.stdout.write(f'all done with date {payload["q"]}')
+
+    def handle(self, *args, **options):
+        payload = {'resource_id': 'd07c0771-01a8-43b2-96cc-c6154e7fa9bd'}
+
+        if options['all'] < 1 and not options['date']:
+            first_record = CovidData.objects.first()
+            dates_range = [first_record.date + timedelta(num) for num in range(1, (date.today() - first_record.date).days)]
+            for day in dates_range:
+                payload['q'] = day.strftime('%Y/%m/%d')
+                self.run_queries(payload)
+            # payload['q'] = three_days_ago.strftime('%Y/%m/%d')
+        elif options['date']:
+            date_to_fetch = datetime.strptime(options['date'][0], '%Y-%m-%d')
+            payload['q'] = date_to_fetch.strftime('%Y/%m/%d')
+            self.run_queries(payload)

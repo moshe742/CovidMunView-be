@@ -56,7 +56,7 @@ class CovidDataView(View):
         else:
             num_of_agases_at_city = AgasCity.objects.filter(city__code=city).count()
 
-        covid_by_area = covid_by_city.all()
+        covid_by_area = covid_by_city
         if num_of_agases_at_city:
             covid_by_area = covid_by_area[:num_of_agases_at_city]
         # data = serializers.serialize('json', covid_by_area)
