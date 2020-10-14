@@ -80,7 +80,6 @@ class Command(BaseCommand):
             for day in dates_range:
                 payload['q'] = day.strftime('%Y/%m/%d')
                 self.run_queries(payload)
-            # payload['q'] = three_days_ago.strftime('%Y/%m/%d')
         elif options['date']:
             date_to_fetch = datetime.strptime(options['date'][0], '%Y-%m-%d')
             payload['q'] = date_to_fetch.strftime('%Y/%m/%d')
