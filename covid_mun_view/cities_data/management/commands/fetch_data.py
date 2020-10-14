@@ -84,3 +84,5 @@ class Command(BaseCommand):
             date_to_fetch = datetime.strptime(options['date'][0], '%Y-%m-%d')
             payload['q'] = date_to_fetch.strftime('%Y/%m/%d')
             self.run_queries(payload)
+        elif options['all'] > 0:
+            self.run_queries(payload)
