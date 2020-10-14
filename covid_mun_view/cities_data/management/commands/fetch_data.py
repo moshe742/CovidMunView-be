@@ -54,7 +54,7 @@ class Command(BaseCommand):
                     agas_city=agas_city,
                 )
                 if '<' not in record['accumulated_tested']:
-                    covid_data.accumulated_tests = record['accumulated_tested']
+                    covid_data.accumulated_tested = record['accumulated_tested']
                 if '<' not in record['accumulated_cases']:
                     covid_data.accumulated_cases = record['accumulated_cases']
                 if '<' not in record['accumulated_recoveries']:
