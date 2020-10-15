@@ -22,9 +22,9 @@ class Command(BaseCommand):
         # 0- city name, 1- city code, 2- agas code, 3- districts, 4- main streets
         for row in csv_data:
             city = City.objects.get(code=row[1])
-            agas_city = AgasCity.objects.filter(city=city).filter(code=row[2])
+            agas_city = AgasCity.objects.filter(city=city.id).filter(code=row[2])
             if agas_city.count() < 1:
-                logger.error(f'{agas_city.count()}, {row}')
+                logger.error(f'{row}')
             else:
                 agas_city[0].districts = row[3]
                 agas_city[0].main_streets = row[4]
