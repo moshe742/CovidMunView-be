@@ -1,3 +1,4 @@
+import logging
 import csv
 
 from django.core.management.base import BaseCommand, CommandError
@@ -7,6 +8,8 @@ from cities_data.models import (
     City
 )
 
+logger = logging.getLogger(__name__)
+
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
@@ -14,14 +17,15 @@ class Command(BaseCommand):
             file_data = f.readlines()
 
         csv_data = csv.reader(file_data)
-        next(csv_data)
 
         # 0- city name, 1- city code, 2- agas code, 3- districts, 4- main streets
         for row in csv_data:
             city = City.objects.get(code=row[1])
             agas_city = AgasCity.objects.filter(city=city).filter(code=row[2])
-            print(f'{agas_city.count}')
-            print(row)
-            agas_city[0].districts = row[3]
-            agas_city[0].main_streets = row[4]
-            agas_city[0].save()
+            if agas_city.count() < 1:
+                print(f'{agas_city.count}')
+                print(row)
+            else:
+                agas_city[0].districts = row[3]
+                agas_city[0].main_streets = row[4]
+                agas_city[0].save()
