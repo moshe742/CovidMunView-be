@@ -9,6 +9,7 @@ from cities_data.models import (
 )
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
 class Command(BaseCommand):
@@ -23,6 +24,7 @@ class Command(BaseCommand):
             city = City.objects.get(code=row[1])
             agas_city = AgasCity.objects.filter(city=city).filter(code=row[2])
             if agas_city.count() < 1:
+                logger.error(f'{agas_city.count}, {row}')
                 print(f'{agas_city.count}')
                 print(row)
             else:
