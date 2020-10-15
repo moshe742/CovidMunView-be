@@ -20,7 +20,8 @@ class Command(BaseCommand):
         for row in csv_data:
             city = City.objects.get(code=row[1])
             agas_city = AgasCity.objects.filter(city=city).filter(code=row[2])
-            print(f'{agas_city.count()}, row 2: {row[2]}')
+            print(f'{agas_city.count}')
+            print(row)
             agas_city[0].districts = row[3]
             agas_city[0].main_streets = row[4]
             agas_city[0].save()
