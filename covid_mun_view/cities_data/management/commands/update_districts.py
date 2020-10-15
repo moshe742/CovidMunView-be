@@ -24,15 +24,7 @@ class Command(BaseCommand):
             city = City.objects.get(code=row[1])
             agas_city = AgasCity.objects.filter(city=city.id)
             agas_city_filtered = agas_city.filter(code=row[2])
-            try:
-                agas_city_filtered[0].districts = row[3]
-                agas_city_filtered[0].main_streets = row[4]
-                agas_city_filtered[0].save()
-            except IndexError as e:
-                if row[1] != '2400':
-                    continue
-                logger.error(str(e))
-                logger.info(str(agas_city))
-                logger.info(row[2])
-                logger.info(str(city))
-                logger.info(row)
+            logger.info(f"row 2: {row[2]}, row: {row}")
+            agas_city_filtered[0].districts = row[3]
+            agas_city_filtered[0].main_streets = row[4]
+            agas_city_filtered[0].save()
