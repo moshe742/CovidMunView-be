@@ -30,4 +30,5 @@ class Command(BaseCommand):
             except IndexError as e:
                 logger.error(str(e))
                 logger.info(str(agas_city))
+                logger.info(str(city))
                 logger.info(row)
