@@ -22,7 +22,7 @@ class Command(BaseCommand):
         # 0- city name, 1- city code, 2- agas code, 3- districts, 4- main streets
         for row in csv_data:
             city = City.objects.get(code=row[1])
-            agas_city = AgasCity.objects.filter(city=2400)
+            agas_city = AgasCity.objects.filter(city=city)
             agas_city_filtered = agas_city.filter(code=10)
             print(f'filter by city: {agas_city}')
             print(f'filter by agas: {agas_city_filtered}')
