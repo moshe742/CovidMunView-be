@@ -27,7 +27,7 @@ class Command(BaseCommand):
             try:
                 agas_city_filtered[0].districts = row[3]
                 agas_city_filtered[0].main_streets = row[4] if row[4] else 'unknown'
-                agas_city_filtered.save()
+                agas_city_filtered[0].save()
             except IndexError:
                 logger.error(f"agas {row[2]} in city {row[1]} doesn't exist")
                 logger.info(f'creating agas {row[2]} in city {row[1]}')
