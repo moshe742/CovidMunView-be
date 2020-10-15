@@ -27,7 +27,7 @@ class Command(BaseCommand):
                 agas_city[0].districts = row[3]
                 agas_city[0].main_streets = row[4]
                 agas_city[0].save()
-            except Exception as e:
+            except IndexError as e:
                 logger.error(str(e))
                 logger.info(str(agas_city))
                 logger.info(row)
