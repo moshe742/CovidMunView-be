@@ -24,8 +24,8 @@ class Command(BaseCommand):
             city = City.objects.get(code=row[1])
             agas_city = AgasCity.objects.filter(city=2400)
             agas_city_filtered = agas_city.filter(code=10)
-            logger.info(agas_city)
-            logger.info(agas_city_filtered)
+            print(agas_city)
+            print(agas_city_filtered)
             # logger.info(f"row 2: {row[2]}, row: {row}")
             # agas_city_filtered[0].districts = row[3]
             # agas_city_filtered[0].main_streets = row[4]
