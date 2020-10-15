@@ -23,9 +23,11 @@ class Command(BaseCommand):
         for row in csv_data:
             city = City.objects.get(code=row[1])
             agas_city = AgasCity.objects.filter(city=city.id).filter(code=row[2])
-            if agas_city.count() < 1:
-                logger.error(f'{row}')
-            else:
+            try:
                 agas_city[0].districts = row[3]
                 agas_city[0].main_streets = row[4]
                 agas_city[0].save()
+            except Exception as e:
+                logger.error(str(e))
+                logger.info(str(agas_city))
+                logger.info(row)
