@@ -24,9 +24,12 @@ class Command(BaseCommand):
             city = City.objects.get(code=row[1])
             agas_city = AgasCity.objects.filter(city=city)
             agas_city_filtered = agas_city.filter(code=row[2])
+            logger.info(agas_city_filtered[0].districts)
+            logger.info(agas_city_filtered[0].main_streets)
             try:
                 agas_city_filtered[0].districts = row[3]
                 agas_city_filtered[0].main_streets = row[4] if row[4] else 'unknown'
+                logger.info(agas_city_filtered[0].districts)
                 agas_city_filtered[0].save()
             except IndexError:
                 logger.error(f"agas {row[2]} in city {row[1]} doesn't exist")
