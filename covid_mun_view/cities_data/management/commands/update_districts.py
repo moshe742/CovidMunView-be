@@ -25,8 +25,6 @@ class Command(BaseCommand):
             agas_city = AgasCity.objects.filter(city=city).filter(code=row[2])
             if agas_city.count() < 1:
                 logger.error(f'{agas_city.count()}, {row}')
-                print(f'{agas_city.count()}')
-                print(row)
             else:
                 agas_city[0].districts = row[3]
                 agas_city[0].main_streets = row[4]
