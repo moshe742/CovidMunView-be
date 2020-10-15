@@ -32,4 +32,5 @@ class Command(BaseCommand):
                 logger.error(f"agas {row[2]} in city {row[1]} doesn't exist")
                 logger.info(f'creating agas {row[2]} in city {row[1]}')
                 main_streets = row[4] if row[4] else 'unknown'
-                AgasCity(districts=row[3], main_streets=main_streets, code=row[2], city=city)
+                agas_city_new = AgasCity(districts=row[3], main_streets=main_streets, code=row[2], city=city)
+                agas_city_new.save()
