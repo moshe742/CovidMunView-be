@@ -9,9 +9,6 @@ from cities_data.models import (
 
 
 class Command(BaseCommand):
-    def add_arguments(self, parser):
-        parser.add_argument('column', nargs=1)
-
     def handle(self, *args, **options):
         with open('/home/moshe/street_map.csv') as f:
             file_data = f.readlines()
