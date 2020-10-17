@@ -94,7 +94,7 @@ class Command(BaseCommand):
         else:
             city_data.cumulated_number_of_diagnostic_tests = -1
 
-        print(record['City_Code'])
+        print(record['City_Code'], record['City_Name'])
         city = City.objects.get(code=record['City_Code'])
         city_data.city = city
         city_data.save()
