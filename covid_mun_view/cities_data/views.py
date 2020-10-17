@@ -48,7 +48,7 @@ class CovidCityView(View):
 class CovidDataView(View):
     def get(self, request, city, start_date=None, end_date=None):
         logger.debug('start get')
-        num_of_agases_at_city = 0
+
         covid_by_agas = CovidData.objects.select_related('agas_city').select_related('agas_city__city').filter(agas_city__city__code=city).order_by('-date')
         covid_by_city = CityData.objects.select_related('city').filter(city__code=city).order_by('-date')
         if start_date and end_date:
@@ -61,12 +61,12 @@ class CovidDataView(View):
             covid_by_agas = covid_by_agas.filter(date=start_date)
             covid_by_city = covid_by_city.filter(date=start_date)
         else:
-            num_of_agases_at_city = AgasCity.objects.filter(city__code=city).count()
+            date_to_get = covid_by_agas.first().date
+            covid_by_agas = covid_by_agas.filter(date=date_to_get)
             covid_by_city = [covid_by_city.first()]
 
         covid_by_area = covid_by_agas
-        if num_of_agases_at_city:
-            covid_by_area = covid_by_area[:num_of_agases_at_city]
+
         # data = serializers.serialize('json', covid_by_area)
         agas_data = []
         for area in covid_by_area:
