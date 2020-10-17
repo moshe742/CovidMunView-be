@@ -5,7 +5,12 @@ from django.http import JsonResponse
 from django.views import View
 from django.core import serializers
 
-from cities_data.models import CovidData, AgasCity, City
+from cities_data.models import (
+    CovidData,
+    AgasCity,
+    City,
+    CityData,
+)
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -44,23 +49,25 @@ class CovidDataView(View):
     def get(self, request, city, start_date=None, end_date=None):
         logger.debug('start get')
         num_of_agases_at_city = 0
-        covid_by_city = CovidData.objects.select_related('agas_city').select_related('agas_city__city').filter(agas_city__city__code=city).order_by('-date')
+        covid_by_agas = CovidData.objects.select_related('agas_city').select_related('agas_city__city').filter(agas_city__city__code=city).order_by('-date')
+        covid_by_city = CityData.objects.select_related('city').filter(city__code=city).order_by('-date')
         if start_date and end_date:
             start_date = datetime.strptime(start_date, '%Y-%m-%d')
-            covid_by_city = covid_by_city.filter(date__gte=start_date)
             end_date = datetime.strptime(end_date, '%Y-%m-%d')
-            covid_by_city = covid_by_city.filter(date__lte=end_date)
+            covid_by_agas = covid_by_agas.filter(date__gte=start_date).filter(date__lte=end_date)
+            covid_by_city = covid_by_city.filter(date__gte=start_date).filter(date__lte=end_date)
         elif start_date:
             start_date = datetime.strptime(start_date, '%Y-%m-%d')
+            covid_by_agas = covid_by_agas.filter(date=start_date)
             covid_by_city = covid_by_city.filter(date=start_date)
         else:
             num_of_agases_at_city = AgasCity.objects.filter(city__code=city).count()
 
-        covid_by_area = covid_by_city
+        covid_by_area = covid_by_agas
         if num_of_agases_at_city:
             covid_by_area = covid_by_area[:num_of_agases_at_city]
         # data = serializers.serialize('json', covid_by_area)
-        res = []
+        agas_data = []
         for area in covid_by_area:
             d = dict(
                 city_code=area.agas_city.city.code,
@@ -79,6 +86,20 @@ class CovidDataView(View):
                 agas=area.agas_city.districts,
                 city=area.agas_city.city.name,
             )
-            res.append(d)
+            agas_data.append(d)
+
+        city_data = []
+        for row in covid_by_city:
+            d = dict(
+                city_code=row.city.code,
+                date=row.date.strftime('%d/%m/%Y'),
+                accumulated_tested=row.cumulated_number_of_diagnostic_tests,
+                accumulated_cases=row.cumulative_verified_cases,
+                accumulated_recoveries=row.cumulated_recovered,
+                accumulated_deaths=row.cumulated_deaths,
+                city=row.city.name,
+            )
+            city_data.append(d)
+
         logger.debug('end get')
-        return JsonResponse(res, safe=False)
+        return JsonResponse({'agas': agas_data, 'city': city_data}, safe=False)
