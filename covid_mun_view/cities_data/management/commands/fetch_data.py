@@ -98,7 +98,7 @@ class Command(BaseCommand):
             date_to_fetch = datetime.strptime(options['date'][0], '%Y-%m-%d')
             self.run_queries(options['data_type'][0], date_to_fetch)
         elif options['all']:
-            self.run_queries(options['data_type'])
+            self.run_queries(options['data_type'][0])
         else:
             first_record = CovidData.objects.first()
             dates_range = [first_record.date + timedelta(num) for num in
