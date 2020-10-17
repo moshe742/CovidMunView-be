@@ -74,23 +74,23 @@ class Command(BaseCommand):
         else:
             city_data.cumulative_verified_cases = -1
 
-        if '<' not in record['Cumulative_verified_cases']:
-            city_data.cumulated_recovered = record['Cumulative_verified_cases']
+        if '<' not in record['Cumulated_recovered']:
+            city_data.cumulated_recovered = record['Cumulated_recovered']
         else:
             city_data.cumulated_recovered = -1
 
-        if '<' not in record['Cumulative_verified_cases']:
-            city_data.cumulated_deaths = record['Cumulative_verified_cases']
+        if '<' not in record['Cumulated_deaths']:
+            city_data.cumulated_deaths = record['Cumulated_deaths']
         else:
             city_data.cumulated_deaths = -1
 
-        if '<' not in record['Cumulative_verified_cases']:
-            city_data.cumulated_number_of_tests = record['Cumulative_verified_cases']
+        if '<' not in record['Cumulated_number_of_tests']:
+            city_data.cumulated_number_of_tests = record['Cumulated_number_of_tests']
         else:
             city_data.cumulated_number_of_tests = -1
 
-        if '<' not in record['Cumulative_verified_cases']:
-            city_data.cumulated_number_of_diagnostic_tests = record['Cumulative_verified_cases']
+        if '<' not in record['Cumulated_number_of_diagnostic_tests']:
+            city_data.cumulated_number_of_diagnostic_tests = record['Cumulated_number_of_diagnostic_tests']
         else:
             city_data.cumulated_number_of_diagnostic_tests = -1
 
