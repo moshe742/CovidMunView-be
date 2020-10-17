@@ -1,6 +1,11 @@
 from django.contrib import admin
 
-from cities_data.models import City, AgasCity, CovidData
+from cities_data.models import (
+    City,
+    AgasCity,
+    CovidData,
+    CityData,
+)
 
 
 # Register your models here.
@@ -16,6 +21,11 @@ class CovidDataAdmin(admin.ModelAdmin):
     list_display = ['date', 'agas_city', 'ministry_id']
 
 
+class CityDataAdmin(admin.ModelAdmin):
+    list_display = ['date', 'city', 'ministry_id']
+
+
 admin.site.register(City, CityAdmin)
 admin.site.register(AgasCity, AgasCityAdmin)
 admin.site.register(CovidData, CovidDataAdmin)
+admin.site.register(CityData, CityDataAdmin)

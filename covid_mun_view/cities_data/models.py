@@ -20,6 +20,23 @@ class AgasCity(models.Model):
         return f'{self.districts}: {self.code}, {self.city}'
 
 
+class CityData(models.Model):
+    ministry_id = models.IntegerField()
+    date = models.DateField()
+    cumulative_verified_cases = models.IntegerField()
+    cumulated_recovered = models.IntegerField()
+    cumulated_deaths = models.IntegerField()
+    cumulated_number_of_tests = models.IntegerField()
+    cumulated_number_of_diagnostic_tests = models.IntegerField()
+    city = models.ForeignKey(City, on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ['-date']
+
+    def __str__(self):
+        return f'{self.city.name}: {self.date}, {self.ministry_id}'
+
+
 class CovidData(models.Model):
     ministry_id = models.IntegerField()
     date = models.DateField()
