@@ -65,7 +65,38 @@ class Command(BaseCommand):
         covid_data.save()
 
     def add_city_data(self, record):
-        pass
+        city_data = CityData(
+            ministry_id=record['_id'],
+            date=record['Date'],
+        )
+        if '<' not in record['Cumulative_verified_cases']:
+            city_data.cumulative_verified_cases = record['Cumulative_verified_cases']
+        else:
+            city_data.cumulative_verified_cases = -1
+
+        if '<' not in record['Cumulative_verified_cases']:
+            city_data.cumulated_recovered = record['Cumulative_verified_cases']
+        else:
+            city_data.cumulated_recovered = -1
+
+        if '<' not in record['Cumulative_verified_cases']:
+            city_data.cumulated_deaths = record['Cumulative_verified_cases']
+        else:
+            city_data.cumulated_deaths = -1
+
+        if '<' not in record['Cumulative_verified_cases']:
+            city_data.cumulated_number_of_tests = record['Cumulative_verified_cases']
+        else:
+            city_data.cumulated_number_of_tests = -1
+
+        if '<' not in record['Cumulative_verified_cases']:
+            city_data.cumulated_number_of_diagnostic_tests = record['Cumulative_verified_cases']
+        else:
+            city_data.cumulated_number_of_diagnostic_tests = -1
+
+        city = City.objects.get(code=record['City_code'])
+        city_data.city = city
+        city_data.save()
 
     def run_queries(self, data_type, date_=None):
         url = 'https://data.gov.il'
@@ -85,13 +116,16 @@ class Command(BaseCommand):
         records = res_json['result']['records']
         while records:
             for record in records:
-                self.add_covid_data(record)
+                if data_type == 'covid':
+                    self.add_covid_data(record)
+                elif data_type == 'city':
+                    self.add_city_data(record)
             sleep(1)
             self.stdout.write(f"getting the next batch from {res_json['result']['_links']['next']}")
             res = requests.get(f"{url}{res_json['result']['_links']['next']}")
             res_json = res.json()
             records = res_json['result']['records']
-        self.stdout.write(f'all done with date {payload["q"]}')
+        self.stdout.write(f'all done with date {date_}')
 
     def handle(self, *args, **options):
         if options['date']:
