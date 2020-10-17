@@ -76,7 +76,7 @@ class Command(BaseCommand):
         }
         date_format = {
             'covid': '%Y/%m/%d',
-            'city': '%Y-%m-%d'
+            'city': '%Y-%m-%d',
         }
         if date_:
             payload[data_type]['q'] = date_.strftime(date_format[data_type])
@@ -96,7 +96,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         if options['date']:
             date_to_fetch = datetime.strptime(options['date'][0], '%Y-%m-%d')
-            self.run_queries(options['data_type'], date_to_fetch)
+            self.run_queries(options['data_type'][0], date_to_fetch)
         elif options['all']:
             self.run_queries(options['data_type'])
         else:
