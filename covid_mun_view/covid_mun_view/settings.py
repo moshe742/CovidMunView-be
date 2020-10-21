@@ -26,7 +26,7 @@ SECRET_KEY = os.environ.get('COVID_SECRET')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG_COVID', False)
 
-ALLOWED_HOSTS = ['covid.moshe742.name', 'localhost']
+ALLOWED_HOSTS = ['coronainthecity.com', 'covid.moshe742.name', 'localhost']
 
 
 # Application definition
